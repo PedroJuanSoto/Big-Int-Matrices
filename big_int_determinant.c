@@ -52,9 +52,10 @@ ll gcd(ll n, ll k){
     return k;
   else if (k == 0)
     return n;
+  else if (k == 1)
+    return 1;
 
-  while (k<n)
-    n = n-k;
+  n = n%k;
 
   return gcd(n, k);
 }
