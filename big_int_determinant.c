@@ -4,10 +4,8 @@
 #define ll long long int
 
 int main(int argc, char *argv[]){
-  ll det(int n, ll mat[n][n]);
-  ll gcd(ll n, ll k);
-  void row_i_to_j_reduced(int i, int j, int n, ll mat[n][n], ll reduced[n]);
   int n = atoi(argv[1]);
+  ll det(int n, ll mat[n][n]);
   void produce_cantorpairs(int n, ll cantor[n][n]);
   void produce_simple_cycle_mat(int n, ll mat[n][n]);
   void prinmat(int n, ll mat[n][n]);
@@ -60,10 +58,12 @@ ll gcd(ll n, ll k){
   return gcd(n, k);
 }
 
-void row_i_to_j_reduced(int i, int j, int n, ll mat[n][n], ll reduced[n]){
+void row_i_to_j_reduced(int i, int j, int n, ll mat[n][n], ll reduced[n], ll r[(n*(n-1))/2], int* u){
   ll d = gcd(mat[i][i], mat[j][i]);
   ll fst = mat[i][i]/d;
   ll snd = mat[j][i]/d;
+  r[(*u)] = mat[i][i]/d;
+  (*u)++;
 
   for (int k=0; k<n; k++)
     reduced[k] = fst*mat[j][k] - snd*mat[i][k];
@@ -71,13 +71,13 @@ void row_i_to_j_reduced(int i, int j, int n, ll mat[n][n], ll reduced[n]){
 
 
 ll det(int n, ll mat[n][n]){
-  void row_i_to_j_reduced(int i, int j, int n, ll mat[n][n], ll reduced[n]);
+  void row_i_to_j_reduced(int i, int j, int n, ll mat[n][n], ll reduced[n], ll r[(n*(n-1))/2], int* u);
   int can_be_saved(int i, int n, ll mat[n][n]);
   void switch_i_with_j(int i, int j, int n, ll mat[n][n]);
   int can_be_saved_up(int i, int n, ll mat[n][n]);
-  void simplfy_fraction(int n, ll r[n*(n-1)], ll acc[n]);
+  void simplfy_fraction(int n, ll r[(n*(n-1))/2], ll acc[n]);
   ll d;
-  ll r[n*(n-1)];
+  ll r[(n*(n-1))/2];
   ll sig = 1;
   int t;
   int u=0;
@@ -88,26 +88,8 @@ ll det(int n, ll mat[n][n]){
       return 0;
     else if (t>0)
       sig = sig*(-1), switch_i_with_j(i, t, n, mat);
-    for (int j=i+1; j<n; j++){
-      d = gcd(mat[i][i], mat[j][i]);
-      r[u] = mat[i][i]/d;
-      u++;
-      row_i_to_j_reduced(i, j, n, mat, mat[j]);
-    }
-  }
-
-  for (int i=n-1; i>-1; i--){
-    t = can_be_saved_up(i, n, mat);
-    if (t == 0)
-      return 0;
-    else if (t>0)
-      sig = sig*(-1), switch_i_with_j(i, t, n, mat);
-    for (int j=i-1; j>-1; j--){
-      d = gcd(mat[i][i], mat[j][i]);
-      r[u] = mat[i][i]/d;
-      u++;
-      row_i_to_j_reduced(i, j, n, mat, mat[j]);
-    }
+    for (int j=i+1; j<n; j++)
+      row_i_to_j_reduced(i, j, n, mat, mat[j], r, &u);
   }
 
   ll acc[n];
@@ -117,7 +99,7 @@ ll det(int n, ll mat[n][n]){
   simplfy_fraction(n, r, acc);
 
   ll bot=1;
-  for (int k=0; k<n*(n-1); k++){
+  for (int k=0; k<(n*(n-1))/2; k++){
     bot = bot*r[k];
   }
 
@@ -151,20 +133,9 @@ int can_be_saved(int i, int n, ll mat[n][n]){
   }
 }
 
-int can_be_saved_up(int i, int n, ll mat[n][n]){
-  if (mat[i][i] !=0)
-    return -1;
-  else{
-    for (int j=n-1; j>-1; j--)
-      if (mat[j][i] !=0)
-        return j;
-    return 0;
-  }
-}
-
-void simplfy_fraction(int n, ll big[n*(n-1)], ll small[n]){
+void simplfy_fraction(int n, ll big[(n*(n-1))/2], ll small[n]){
   ll d;
-  for (int i=0; i<n*(n-1); i++)
+  for (int i=0; i<(n*(n-1))/2; i++)
     for (int j=0; j<n; j++)
       if ((d=gcd(big[i], small[j]))>1)
         big[i] = big[i] / d, small[j] = small[j] / d;
