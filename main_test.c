@@ -7,8 +7,19 @@
 #define ll __int128
 
 int main(int argc, char *argv[]){
-  int n = atoi(argv[1]);
-  int iterations = atoi(argv[2]);
+  int n, iterations;
+  if (argc>1){
+    n = atoi(argv[1]);
+    if (argc>2)
+      iterations = atoi(argv[2]);
+    else
+      iterations = 100000;
+  }
+  else{
+    n=9;
+    iterations = 100000;
+  }
+
   ll det(int n, ll mat[n][n]);
   void produce_cycle_mat(int n, int k, ll mat[n][n]);
   void prinmat(int n, ll mat[n][n]);
