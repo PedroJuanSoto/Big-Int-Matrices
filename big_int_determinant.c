@@ -1,16 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
+// #define ll long long int
 #define ll __int128
 
 ll gcd(ll n, ll k){
-  if(n<0 || k<0){
-    if(n<0 && k<0)
-      return gcd(-n, -k);
-    else if (k<0)
-      return gcd(n, -k);
-    else if (n<0)
-      return gcd(-n, k);
-    }
+  if(n<0 && k<0)
+    return gcd(-n, -k);
+  else if (k<0)
+    return gcd(n, -k);
+  else if (n<0)
+    return gcd(-n, k);
 
   if (n<k){
     ll z = n;
