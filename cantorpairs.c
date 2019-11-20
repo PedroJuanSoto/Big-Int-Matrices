@@ -17,7 +17,7 @@ void produce_cantorpairs(int n, ll cantor[n][n]){
 
     for (int k = n; k< 2*n-2; k++){
       i = n-1, j = k-i;
-      cantor[i][j] = ((i+j+1)*(i+j))/2;
+      cantor[i][j] = cantor[j-1][i]+1;
       while (j<n-1){
         i--, j++;
         cantor[i][j] = cantor[i+1][j-1]+1;
@@ -35,9 +35,11 @@ void produce_simple_cycle_mat(int n, ll mat[n][n]){
 }
 
 void prinmat(int n, ll mat[n][n]){
+  printf("\n");
   for (int i=0; i<n; i++){
     for (int j=0; j<n; j++)
       printf("%lld, ", mat[i][j]);
     printf("\n");
   }
+  printf("\n");
 }
