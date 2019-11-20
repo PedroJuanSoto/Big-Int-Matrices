@@ -3,12 +3,13 @@
 #define ll __int128
 
 ll gcd(ll n, ll k){
-  if(n<0 && k<0)
-    return gcd(-n, -k);
-  else if (k<0)
-    return gcd(n, -k);
-  else if (n<0)
-    return gcd(-n, k);
+  if(n<0 || k<0)
+    if(n<0 && k<0)
+      return gcd(-n, -k);
+    else if (k<0)
+      return gcd(n, -k);
+    else if (n<0)
+      return gcd(-n, k);
 
   if (n<k){
     ll z = n;
@@ -42,9 +43,8 @@ void row_i_to_j_reduced(int i, int j, int n, ll mat[n][n], ll reduced[n], ll r[(
 
 ll det(int n, ll mat[n][n]){
   void row_i_to_j_reduced(int i, int j, int n, ll mat[n][n], ll reduced[n], ll r[(n*(n-1))/2], int* u);
-  int can_be_saved(int i, int n, ll mat[n][n]);
+  int is_rank_zero(int i, int n, ll mat[n][n]);
   void switch_i_with_j(int i, int j, int n, ll mat[n][n]);
-  int can_be_saved_up(int i, int n, ll mat[n][n]);
   void simplfy_fraction(int n, ll r[(n*(n-1))/2], ll acc[n]);
   ll d;
   ll r[(n*(n-1))/2];
@@ -53,7 +53,7 @@ ll det(int n, ll mat[n][n]){
   int u=0;
 
   for (int i=0; i<n; i++){
-    t = can_be_saved(i, n, mat);
+    t = is_rank_zero(i, n, mat);
     if (t == 0)
       return 0;
     else if (t>0)
@@ -91,15 +91,14 @@ void switch_i_with_j(int i, int j, int n, ll mat[n][n]){
     mat[j][k] = switchy[k];
 }
 
-int can_be_saved(int i, int n, ll mat[n][n]){
+int is_rank_zero(int i, int n, ll mat[n][n]){
   if (mat[i][i] !=0)
     return -1;
-  else{
+  else
     for (int j=i; j<n; j++)
       if (mat[j][i] !=0)
         return j;
     return 0;
-  }
 }
 
 void simplfy_fraction(int n, ll big[(n*(n-1))/2], ll small[n]){
