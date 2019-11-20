@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define ll long long int
+#define ll __int128
 
 void produce_cantorpairs(int n, ll cantor[n][n]){
 

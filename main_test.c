@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "cantorpairs.c"
 #include "big_int_determinant.c"
-#define ll long long int
+#define ll __int128
 
 int main(int argc, char *argv[]){
   int n = atoi(argv[1]);
@@ -30,11 +30,9 @@ int main(int argc, char *argv[]){
   }
   printf("\n\n\n");
 
-  produce_cycle_mat(n, 5, cantor);
-  prinmat(n, cantor);
-
   produce_cycle_mat(n, 2, cantor);
-  prinmat(n, cantor);
+  if (n<14)
+    prinmat(n, cantor);
 
   return 0;
 }

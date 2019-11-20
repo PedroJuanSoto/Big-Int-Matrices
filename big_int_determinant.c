@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define ll long long int
+#define ll __int128
 
 ll gcd(ll n, ll k){
   if(n<0 && k<0)
