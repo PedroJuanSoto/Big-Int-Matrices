@@ -27,11 +27,11 @@ void produce_cantorpairs(int n, ll cantor[n][n]){
     cantor[n-1][n-1] = n*n-1;
 }
 
-void produce_simple_cycle_mat(int n, ll mat[n][n]){
+void produce_cycle_mat(int n, int k, ll mat[n][n]){
 
   for(int i=0; i<n; i++)
     for(int j=0; j<n; j++)
-      mat[i][j] = (i+j)%n;
+      mat[i][j] = ((i+j+k)%n)+1;
 }
 
 void prinmat(int n, ll mat[n][n]){

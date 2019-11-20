@@ -8,12 +8,12 @@ int main(int argc, char *argv[]){
   int n = atoi(argv[1]);
   ll det(int n, ll mat[n][n]);
   void produce_cantorpairs(int n, ll cantor[n][n]);
-  void produce_simple_cycle_mat(int n, ll mat[n][n]);
+  void produce_cycle_mat(int n, int k, ll mat[n][n]);
   void prinmat(int n, ll mat[n][n]);
   ll cantor[n][n];
 
   if (n>14)
-    produce_simple_cycle_mat(n, cantor);
+    produce_cycle_mat(n, 2, cantor);
   else
     produce_cantorpairs(n, cantor);
 
@@ -29,6 +29,12 @@ int main(int argc, char *argv[]){
     prinmat(n, cantor);
   }
   printf("\n\n\n");
+
+  produce_cycle_mat(n, 5, cantor);
+  prinmat(n, cantor);
+
+  produce_cycle_mat(n, 2, cantor);
+  prinmat(n, cantor);
 
   return 0;
 }
