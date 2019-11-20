@@ -8,45 +8,54 @@
 
 int main(int argc, char *argv[]){
   int n = atoi(argv[1]);
+  int iterations = atoi(argv[2]);
   ll det(int n, ll mat[n][n]);
-  void produce_cantorpairs(int n, ll cantor[n][n]);
   void produce_cycle_mat(int n, int k, ll mat[n][n]);
   void prinmat(int n, ll mat[n][n]);
-  void memoize_cantor_pairs(int n, ll cantor[n][n], ll memo[n*n][2]);
-  void prinmemo(int n, ll ray[n*n][2]);
+  void permute_mat(int i, int j, int k, int l, int n, ll mat[n][n]);
+  void copy_mat(int n, ll mat[n][n], ll copy_cat[n][n]);
   ll cantor[n][n];
+  ll super_max = 923062279;
 
-  if (n>14)
-    produce_cycle_mat(n, 2, cantor);
-  else
-    produce_cantorpairs(n, cantor);
-
-  printf("\n\n\n");
-  if (n<10){
-    prinmat(n, cantor);
-    printf("\n\n\n");
-    ll memo[n*n][2];
-    printf("\n\n\n");
-    memoize_cantor_pairs(n, cantor, memo);
-    prinmemo(n, memo);
-    printf("\n\n\n");
+  srand(time(0));
+  int positions[] = {-1,-1,-1,-1};
+  for (int k=0; k<4; k++)
+    positions[k] = rand()%n;
+  produce_cycle_mat(n, rand()%n, cantor);
+  permute_mat(positions[0], positions[1], positions[2], positions[3], n, cantor);
+  ll max_mat[n][n];
+  copy_mat(n, cantor, max_mat);
+  ll max = det(n, cantor);
+  printf("\ndeterminant is %lld\n", max);
+  ll new;
+  ll new_mat[n][n];
+  produce_cycle_mat(n, rand()%n, cantor);
+  copy_mat(n, cantor, new_mat);
+  for (int i=0; i<iterations; i++){
+    for (int k=0; k<4; k++)
+      positions[k] = rand()%n;
+    copy_mat(n, new_mat, cantor);
+    permute_mat(positions[0], positions[1], positions[2], positions[3], n, cantor);
+    copy_mat(n, cantor, new_mat);
+    new = det(n, cantor);
+    if (new*new>max*max){
+      max = new;
+      copy_mat(n, new_mat, max_mat);
+    }
   }
-  clock_t t;
-  t = clock();
-  ll x = det(n, cantor);
-  t = clock() - t;
-  printf("determinant is %lld, ", x);
-  double time_taken = ((double)t)/CLOCKS_PER_SEC;
-  printf("det() took %f seconds to execute \n", time_taken);
-  if (n<10){
-    printf("\n\n\n");
-    prinmat(n, cantor);
-  }
-  printf("\n\n\n");
 
-  produce_cycle_mat(n, 2, cantor);
-  if (n<14)
-    prinmat(n, cantor);
+  printf("\nmax determinant is %lld\n", max);
+  prinmat(n, max_mat);
+  if (max*max>super_max*super_max){
+      printf("\n\n\n\nEUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!");
+      printf("EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!");
+      printf("EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!");
+      printf("EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!");
+      printf("EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!");
+      printf("EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!");
+      printf("EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!");
+      printf("EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!EUREKA!!!\n\n\n\n");
+  }
 
   return 0;
 }
