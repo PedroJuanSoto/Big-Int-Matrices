@@ -15,11 +15,7 @@ int main(int argc, char *argv[]){
   void permute_mat(int i, int j, int k, int l, int n, ll mat[n][n]);
   void copy_mat(int n, ll mat[n][n], ll copy_cat[n][n]);
   ll cantor[n][n];
-  ll super_max = 923062279;
-  ll super_maxy = 0x3704d007;
-
-  if (super_max == super_maxy)
-      printf("\nohYYYEAAAA\n");
+  ll super_max = 0x3704d007;
 
   srand(time(0));
   int positions[] = {-1,-1,-1,-1};
