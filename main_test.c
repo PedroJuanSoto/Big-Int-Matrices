@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "cantorpairs.c"
+#include "cycle_mat.c"
 #include "big_int_determinant.c"
 // #define ll long long int
 #define ll __int128
