@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
   void prinmat(int n, ll mat[n][n]);
   void permute_mat(int i, int j, int k, int l, int n, ll mat[n][n]);
   void copy_mat(int n, ll mat[n][n], ll copy_cat[n][n]);
-  ll sim_anneal(ld boltz_cons, int n, int curr_time, int total_time, int curr_ener, ll curr_ener, ll mat[n][n], ll cantor[n][n], ll box[n][n], int perm_ind[]);
+  ll sim_anneal(ld boltz_cons, int n, int curr_time, int total_time, ll curr_ener, ll mat[n][n], ll cantor[n][n], ll box[n][n], int perm_ind[]);
   ll cantor[n][n];
   ll super_max = 0x3704d007;
 
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
   produce_cycle_mat(n, rand()%n, cantor);
   copy_mat(n, cantor, new_mat);
   for (int i=0; i<iterations; i++){
-    new = sim_anneal(100, n, i, iterations, new, new_mat, cantor, matty, perm_ind)
+    new = sim_anneal(100, n, i, iterations, new, new_mat, cantor, matty, perm_ind);
     if (new*new>max*max){
       max = new;
       copy_mat(n, new_mat, max_mat);
