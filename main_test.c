@@ -80,8 +80,8 @@ ll sim_anneal(ld boltz_cons, int n, int curr_time, int total_time, ll curr_ener,
     return new;
   }
   ld coin_flip = ((ld)rand())/RAND_MAX;
-  ld temp = boltz_cons*(1 - (((ld) total_time)/(((ld) curr_time))));
-  ld prob_of_state_change = exp2(-(((ld) new)-((ld) curr_ener))/temp);
+  ld temp = boltz_cons*((((ld) total_time)/(((ld) curr_time))) - 1);
+  ld prob_of_state_change = exp2(-(fabsl((ld) curr_ener) - fabsl((ld) new))/temp);
   if (prob_of_state_change>coin_flip){
     copy_mat(n, box, mat);
     return new;
