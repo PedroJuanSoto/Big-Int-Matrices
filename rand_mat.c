@@ -58,21 +58,21 @@ void memoize_cantor_pairs(int n, int cantor[n][n], int memo[n*n][2]){
 }
 
 void produce_rand_mat(int n, ll mat[n][n], int memo_cantor_pairs[n*n][2]){
-  int *forbidden = malloc(sizeof(int));
+  int *forbidden = (int*) malloc(sizeof(int));
   srand(time(0));
   int legal = 0;
   int next_up = -1;
   forbidden[0] = -1;
-  size_t size;
+  void prin_int_ray(int n, int ray[n]);
   for(int i=0; i<n; i++)
     for(int j=0; j<n; j++){
-      forbidden = realloc(forbidden, (n*i+j+1)*sizeof(int));
-      size = sizeof(forbidden)/sizeof(forbidden[0]);
+      forbidden = (int*) realloc(forbidden, (n*i+j+1)*sizeof(int));
+      forbidden[n*i+j] = -1;
       while (legal == 0){
-        next_up = (rand() % 25)+1;
+        next_up = rand() % (n*n);
         int found_one = 0;
-        for (int i = 0; i < size; i++)
-          if (forbidden[i] == next_up)
+        for (int k = 0; k < (n*i+j+1); k++)
+          if (forbidden[k] == next_up)
             found_one = 1;
         if (found_one == 0)
           legal = 1;
@@ -103,11 +103,38 @@ void permute_mat(int i, int j, int k, int l, int n, ll mat[n][n]){
 }
 
 void prinmat(int n, ll mat[n][n]){
-  printf("\n");
+  printf("\n-Matrix is-----------------------------------------------------------\n");
   for (int i=0; i<n; i++){
     for (int j=0; j<n; j++)
       printf("%lld, ", mat[i][j]);
     printf("\n");
   }
-  printf("\n");
+  printf("\n---------------------------------------------------------------------\n");
+}
+
+void prin_int_mat(int n, int mat[n][n]){
+  printf("\n-Matrix is-----------------------------------------------------------\n");
+  for (int i=0; i<n; i++){
+    for (int j=0; j<n; j++)
+      printf("%d, ", mat[i][j]);
+    printf("\n");
+  }
+  printf("\n---------------------------------------------------------------------\n");
+}
+
+void prin_int_memo(int n, int ray[n*n][2]){
+  printf("\n-Memo is-------------------------------------------------------------\n");
+  for (int i=0; i<n*n; i++){
+    printf("(%d, ", ray[i][0]);
+    printf("%d,), ", ray[i][1]);
+  }
+  printf("\n---------------------------------------------------------------------\n");
+}
+
+
+void prin_int_ray(int n, int ray[n]){
+  printf("\n-Array is------------------------------------------------------------\n");
+  for (int i=0; i<n; i++)
+    printf("%d, ", ray[i]);
+  printf("\n---------------------------------------------------------------------\n");
 }

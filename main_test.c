@@ -22,14 +22,7 @@ int main(int argc, char *argv[]){
     iterations = 100000;
   }
 
-  ll det(int n, ll mat[n][n]);
-  void produce_rand_mat(int n, ll mat[n][n], int memo_cantor_pairs[n*n][2]);
-  void prinmat(int n, ll mat[n][n]);
-  void permute_mat(int i, int j, int k, int l, int n, ll mat[n][n]);
-  void copy_mat(int n, ll mat[n][n], ll copy_cat[n][n]);
-  void produce_cantorpairs(int n, int cantor[n][n]);
-  void memoize_cantor_pairs(int n, int cantor[n][n], int memo[n*n][2]);
-  ll sim_anneal(ld boltz_cons, int n, int curr_time, int total_time, ll curr_ener, ll mat[n][n], ll cantor[n][n], ll box[n][n], int perm_ind[]);
+  ll sim_anneal(ld boltz_cons, int n, int curr_time, int total_time, ll curr_ener, ll mat[n][n], ll matty[n][n], ll box[n][n], int perm_ind[]);
   ll mat[n][n];
   int cantor[n][n];
   int memo[n*n][2];
