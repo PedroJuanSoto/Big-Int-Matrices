@@ -48,7 +48,7 @@ int main(int argc, char *argv[]){
   produce_rand_mat(n, mat, memo);
   copy_mat(n, mat, new_mat);
   for (int i=0; i<iterations; i++){
-    new = sim_anneal(1000000, n, i, iterations, new, new_mat, mat, matty, perm_ind);
+    new = sim_anneal(10000, n, i, iterations, new, new_mat, mat, matty, perm_ind);
     if (new*new>max*max){
       max = new;
       copy_mat(n, new_mat, max_mat);

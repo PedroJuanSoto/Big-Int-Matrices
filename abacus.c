@@ -36,17 +36,25 @@ int main(int argc, char const *argv[]) {
   int bin2[]= {1,1,0,0,0,0};
   int bin3[]= {1,1,1};
   int* abby[] = {bin1, bin2, bin3};
-  int num_1s[] = {4,2,3};
-  int num_0s[] = {5,4,0};
+  int num_1s[] = {3,3,3};
+  int num_0s[] = {6,3,0};
   int paramaaas[] = {3,3};
   for (int v = 0; v < mult_fact(6,2,paramaaas)+4; v++) {
     printf("%d\n", gen_next_abacus(3, 0, num_1s, num_0s, abby));
+    printf("-----------------------------\n\n");
     for (int t = 0; t < 3; t++) {
-      printf("-----------------------------\n\n");
       for (int i = 0; i < num_1s[t]+num_0s[t]; i++)
         printf("%d", abby[t][i]);
-      printf("\n\n------------------------------");
+        printf("\n");
     }
+    printf("\n\n------------------------------");
+  }
+  return 0;
+}
+
+int abacus_to_mat(int n, int l, int* abacus[l], ll mat[n][n]){
+  for (int k = 0; k < l; k++) {
+    ;
   }
   return 0;
 }
@@ -58,7 +66,7 @@ int gen_next_abacus(int l, int stack_f, int num_1s[l], int num_0s[l], int* abacu
     int i,j;
     for (i = 0; i < num_1s[stack_f+1]; i++)
       abacus[stack_f+1][i]=1;
-    for (j = num_1s[stack_f+1]; j < num_1s[stack_f+1]+num_0s[stack_f+1]; j++) 
+    for (j = num_1s[stack_f+1]; j < num_1s[stack_f+1]+num_0s[stack_f+1]; j++)
       abacus[stack_f+1][j]=0;
     return gen_next_bin_str(num_1s[stack_f], num_0s[stack_f], abacus[stack_f]);
   }

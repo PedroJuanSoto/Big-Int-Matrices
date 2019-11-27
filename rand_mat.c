@@ -81,6 +81,7 @@ void produce_rand_mat(int n, ll mat[n][n], int memo_cantor_pairs[n*n][2]){
       mat[memo_cantor_pairs[next_up][0]][memo_cantor_pairs[next_up][1]] = (ll) i+1;
       legal = 0;
     }
+    free(forbidden);
 }
 
 void produce_cycle_mat(int n, int k, ll mat[n][n]){
