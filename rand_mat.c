@@ -58,30 +58,19 @@ void memoize_cantor_pairs(int n, int cantor[n][n], int memo[n*n][2]){
 }
 
 void produce_rand_mat(int n, ll mat[n][n], int memo_cantor_pairs[n*n][2]){
-  int *forbidden = (int*) malloc(sizeof(int));
+  int forbidden[n*n];
+  void prinmat(int n, ll mat[n][n]);
   srand(time(0));
   int legal = 0;
-  int next_up = -1;
-  forbidden[0] = -1;
-  void prin_int_ray(int n, int ray[n]);
-  for(int i=0; i<n; i++)
-    for(int j=0; j<n; j++){
-      forbidden = (int*) realloc(forbidden, (n*i+j+1)*sizeof(int));
-      forbidden[n*i+j] = -1;
-      while (legal == 0){
-        next_up = rand() % (n*n);
-        int found_one = 0;
-        for (int k = 0; k < (n*i+j+1); k++)
-          if (forbidden[k] == next_up)
-            found_one = 1;
-        if (found_one == 0)
-          legal = 1;
-      }
-      forbidden[i*n+j] = next_up;
-      mat[memo_cantor_pairs[next_up][0]][memo_cantor_pairs[next_up][1]] = (ll) i+1;
-      legal = 0;
-    }
-    free(forbidden);
+  int next_up;
+  for (int l = 0; l < n*n; l++)
+    forbidden[l]=l;
+  for (int i=0; i < n*n; i++){
+    next_up = rand() % (n*n-i);
+    mat[memo_cantor_pairs[forbidden[next_up]][0]][memo_cantor_pairs[forbidden[next_up]][1]] = (ll) (i/n)+1;
+    for(int j=next_up; j<n*n; j++)
+      forbidden[j] = forbidden[j+1];
+  }
 }
 
 void produce_cycle_mat(int n, int k, ll mat[n][n]){
