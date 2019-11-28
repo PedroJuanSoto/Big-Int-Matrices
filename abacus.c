@@ -5,15 +5,21 @@
 #define ll __int128
 
 int main(int argc, char const *argv[]) {
-  int n,k;
+  void abacus_to_mat(int l, int num_1s[l], int num_0s[l], int* abacus[l], ll mat[l][l]);
+  int n,k,l;
   if (argc>2){
     n = atoi(argv[1]);
     k = atoi(argv[2]);
   }
   else{
     n=2;
-    k = 3;
+    k = 2;
+    l=3;
   }
+  ll mat[l][l];
+  for(int i=0; i<l; i++)
+    for(int j=0; j<l; j++)
+      mat[i][j] = -1;
   int params[] = {n,k};
   int num_of_strings = mult_fact(n+k,2,params);
   int strang[n+k];
@@ -32,31 +38,47 @@ int main(int argc, char const *argv[]) {
       printf("%d", strang[i]);
     printf("\n\n------------------------------");
   }
-  int bin1[]= {1,1,1,1,0,0,0,0,0};
-  int bin2[]= {1,1,0,0,0,0};
+  int bin1[]= {1,1,1,0,0,0,0,0,0};
+  int bin2[]= {1,1,1,0,0,0};
   int bin3[]= {1,1,1};
   int* abby[] = {bin1, bin2, bin3};
   int num_1s[] = {3,3,3};
   int num_0s[] = {6,3,0};
-  int paramaaas[] = {3,3};
-  for (int v = 0; v < mult_fact(6,2,paramaaas)+4; v++) {
-    printf("%d\n", gen_next_abacus(3, 0, num_1s, num_0s, abby));
+  int paramaaas[] = {3,3,3};
+  int done;
+  for (int v = 0; (done=gen_next_abacus(3, 0, num_1s, num_0s, abby)) != 0; v++) {
+    printf("%d\n", done);
     printf("-----------------------------\n\n");
     for (int t = 0; t < 3; t++) {
       for (int i = 0; i < num_1s[t]+num_0s[t]; i++)
         printf("%d", abby[t][i]);
         printf("\n");
     }
+    abacus_to_mat(l, num_1s, num_0s, abby, mat);
+    prinmat(l, mat);
     printf("\n\n------------------------------");
   }
   return 0;
 }
 
-int abacus_to_mat(int n, int l, int* abacus[l], ll mat[n][n]){
+void abacus_to_mat(int l, int num_1s[l], int num_0s[l], int* abacus[l], ll mat[l][l]){
+  for(int i=0; i<l; i++)
+    for(int j=0; j<l; j++)
+      mat[i][j] = -1;
   for (int k = 0; k < l; k++) {
-    ;
+    int count = num_1s[k];
+    int place = 0;
+    for (int i = 0; count > 0; i++)
+      for (int j = 0; j < l; j++)
+        if (mat[i][j]== -1)
+          if (abacus[k][place] == 1) {
+            count = count -1;
+            mat[i][j] = k+1;
+            place++;
+          }
+          else
+            place++;
   }
-  return 0;
 }
 
 int gen_next_abacus(int l, int stack_f, int num_1s[l], int num_0s[l], int* abacus[l]){
