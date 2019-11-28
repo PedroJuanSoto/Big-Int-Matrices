@@ -1,45 +1,121 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 #include "rand_mat.c"
 #include "big_int_determinant.c"
 #define ll __int128
+#define num_thds 3
+
+struct arg_struct {
+  int arg1;
+  ll** arg2;
+  int arg3;
+};
+
+ll detty[num_thds];
+
+void *get_result(void *param){
+  struct arg_struct *args = param;
+  detty[(*args).arg3] = det((*args).arg1, (*args).arg2);
+}
 
 int main(int argc, char const *argv[]) {
   void abacus_to_mat(int l, int num_1s[l], int num_0s[l], int* abacus[l], ll mat[l][l]);
-  int n,k,l;
+  int n,threads_or_not;
   if (argc>1){
     n = atoi(argv[1]);
+    if (argc>2)
+      threads_or_not = atoi(argv[2]);
+    else
+      threads_or_not = 0;
   }
   else{
     n=3;
+    threads_or_not = 0;
   }
+  if (threads_or_not == 0){
+    ll mat[n][n];
+    ll new_mat[n][n];
+    int* abby[n];
+    int num_1s[n], num_0s[n];
 
-  ll mat[n][n];
-  ll new_mat[n][n];
-  int* abby[n];
-  int num_1s[n], num_0s[n];
+    for (int i = n-1; i >= 0; i--) {
+      abby[n-i-1] = (int*) malloc((i+1)*n*sizeof(int));
+      num_1s[n-i-1] = n;
+      num_0s[n-i-1] = n*i;
+      for (int j = 0; j < n; j++)
+        abby[n-i-1][j] = 1;
+      for (int j = n; j < n*(i+1); j++)
+        abby[n-i-1][j] = 0;
+    }
 
-  for (int i = n-1; i >= 0; i--) {
-    abby[n-i-1] = (int*) malloc((i+1)*n*sizeof(int));
-    num_1s[n-i-1] = n;
-    num_0s[n-i-1] = n*i;
-    for (int j = 0; j < n; j++)
-      abby[n-i-1][j] = 1;
-    for (int j = n; j < n*(i+1); j++)
-      abby[n-i-1][j] = 0;
+    int done;
+    ll max = 0;
+    ll new_det;
+    for (int v = 0; (done=gen_next_abacus(n, 0, num_1s, num_0s, abby)) != 0; v++) {
+      abacus_to_mat(n, num_1s, num_0s, abby, mat);
+      copy_mat(n, mat, new_mat);
+      new_det = det(n, new_mat);
+      if (new_det*new_det > max*max){
+        prinmat(n, mat);
+        printf("\ndetterminant = %lld\n", det(n, mat));
+        max =new_det;
+      }
+    }
   }
-  
-  int done;
-  ll max = 0;
-  ll new_det;
-  for (int v = 0; (done=gen_next_abacus(n, 0, num_1s, num_0s, abby)) != 0; v++) {
-    abacus_to_mat(n, num_1s, num_0s, abby, mat);
-    copy_mat(n, mat, new_mat);
-    new_det = det(n, new_mat);
-    if (new_det*new_det > max*max){
-      prinmat(n, mat);
-      printf("\ndetterminant = %lld\n", det(n, mat));
-      max =new_det;
+  else if (threads_or_not ==1){
+    int* abby[n];
+    int num_1s[n], num_0s[n];
+    ll mat[num_thds][n][n];
+    ll new_mat[num_thds][n][n];
+
+    for (int i = n-1; i >= 0; i--) {
+      abby[n-i-1] = (int*) malloc((i+1)*n*sizeof(int));
+      num_1s[n-i-1] = n;
+      num_0s[n-i-1] = n*i;
+      for (int j = 0; j < n; j++)
+        abby[n-i-1][j] = 1;
+      for (int j = n; j < n*(i+1); j++)
+        abby[n-i-1][j] = 0;
+    }
+
+    int done=1;
+    ll max = 0;
+    ll max_mat[n][n];
+    ll new_det[num_thds];
+    for(int i=0; i<num_thds; i++ )
+      new_det[i] = 0;
+    pthread_t *tid = malloc( num_thds* sizeof(pthread_t) );
+    struct arg_struct {
+      int arg1;
+      ll** arg2;
+      int arg3;
+    };
+    struct arg_struct args[n];
+    for (int i = 0; i < num_thds; i++) {
+      args[i].arg1 = n;
+      args[i].arg2 = new_mat[i];
+      args[i].arg3 = i;
+    }
+
+    for (int v = 0; done!=0; v++) {
+      for (int i = 0; i < num_thds; i++) {
+        abacus_to_mat(n, num_1s, num_0s, abby, mat[i]);
+        done=gen_next_abacus(n, 0, num_1s, num_0s, abby);
+        copy_mat(n, mat[i], new_mat[i]);
+      }
+      for(int i=0; i<num_thds; i++ )
+        pthread_create( &tid[i], NULL, get_result, &args[i] );
+      for(int j=0; j<num_thds; j++ )
+        pthread_join( tid[j], NULL );
+      for(int k=0; k<num_thds; k++ ){
+        if (detty[k]*detty[k] > max*max){
+          copy_mat(n, mat[k], max_mat);
+          prinmat(n, max_mat);
+          printf("\ndeterminant = %lld\n", detty[k]);
+          max =detty[k];
+        }
+      }
     }
   }
   return 0;
