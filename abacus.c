@@ -7,56 +7,40 @@
 int main(int argc, char const *argv[]) {
   void abacus_to_mat(int l, int num_1s[l], int num_0s[l], int* abacus[l], ll mat[l][l]);
   int n,k,l;
-  if (argc>2){
+  if (argc>1){
     n = atoi(argv[1]);
-    k = atoi(argv[2]);
   }
   else{
-    n=2;
-    k = 2;
-    l=3;
+    n=3;
   }
-  ll mat[l][l];
-  for(int i=0; i<l; i++)
-    for(int j=0; j<l; j++)
-      mat[i][j] = -1;
-  int params[] = {n,k};
-  int num_of_strings = mult_fact(n+k,2,params);
-  int strang[n+k];
-  for (int j = 0; j < n; j++)
-    strang[j] = 1;
-  for (int j = n; j < n+k; j++)
-    strang[j] = 0;
-  printf("-----------------------------\n\n");
-  for (int i = 0; i < n+k; i++)
-    printf("%d", strang[i]);
-  printf("\n\n------------------------------");
-  for (int t = 0; t < num_of_strings; t++) {
-    printf("-----------------------------\n\n");
-    printf("%d\n", gen_next_bin_str(n, k, strang));
-    for (int i = 0; i < n+k; i++)
-      printf("%d", strang[i]);
-    printf("\n\n------------------------------");
+
+  ll mat[n][n];
+  ll new_mat[n][n];
+  int* abby[n];
+  int num_1s[n], num_0s[n];
+
+  for (int i = n-1; i >= 0; i--) {
+    abby[n-i-1] = (int*) malloc((i+1)*n*sizeof(int));
+    num_1s[n-i-1] = n;
+    num_0s[n-i-1] = n*i;
+    for (int j = 0; j < n; j++)
+      abby[n-i-1][j] = 1;
+    for (int j = n; j < n*(i+1); j++)
+      abby[n-i-1][j] = 0;
   }
-  int bin1[]= {1,1,1,0,0,0,0,0,0};
-  int bin2[]= {1,1,1,0,0,0};
-  int bin3[]= {1,1,1};
-  int* abby[] = {bin1, bin2, bin3};
-  int num_1s[] = {3,3,3};
-  int num_0s[] = {6,3,0};
-  int paramaaas[] = {3,3,3};
+  
   int done;
-  for (int v = 0; (done=gen_next_abacus(3, 0, num_1s, num_0s, abby)) != 0; v++) {
-    printf("%d\n", done);
-    printf("-----------------------------\n\n");
-    for (int t = 0; t < 3; t++) {
-      for (int i = 0; i < num_1s[t]+num_0s[t]; i++)
-        printf("%d", abby[t][i]);
-        printf("\n");
+  ll max = 0;
+  ll new_det;
+  for (int v = 0; (done=gen_next_abacus(n, 0, num_1s, num_0s, abby)) != 0; v++) {
+    abacus_to_mat(n, num_1s, num_0s, abby, mat);
+    copy_mat(n, mat, new_mat);
+    new_det = det(n, new_mat);
+    if (new_det*new_det > max*max){
+      prinmat(n, mat);
+      printf("\ndetterminant = %lld\n", det(n, mat));
+      max =new_det;
     }
-    abacus_to_mat(l, num_1s, num_0s, abby, mat);
-    prinmat(l, mat);
-    printf("\n\n------------------------------");
   }
   return 0;
 }
