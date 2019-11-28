@@ -1,12 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <time.h>
 #include "rand_mat.c"
 #include "big_int_determinant.c"
 #define ll __int128
-#define wha 100
-#define num_thds 9
+#define num_thds 3
 
 struct arg_struct {
   int arg1;
@@ -14,17 +12,14 @@ struct arg_struct {
   int arg3;
 };
 
-ll dets[num_thds];
+ll detty[num_thds];
 
 void *get_result(void *param){
   struct arg_struct *args = param;
-  dets[(*args).arg3] = det((*args).arg1, (*args).arg2);
+  detty[(*args).arg3] = det((*args).arg1, (*args).arg2);
 }
 
 int main(int argc, char const *argv[]) {
-  srand((int) time(NULL));
-  clock_t t;
-  t = clock();
   void abacus_to_mat(int l, int num_1s[l], int num_0s[l], int* abacus[l], ll mat[l][l]);
   int n,threads_or_not;
   if (argc>1){
@@ -57,8 +52,7 @@ int main(int argc, char const *argv[]) {
     int done;
     ll max = 0;
     ll new_det;
-    for (int v = 0; v<wha; v++) {
-      done=gen_next_abacus(n, 0, num_1s, num_0s, abby);
+    for (int v = 0; (done=gen_next_abacus(n, 0, num_1s, num_0s, abby)) != 0; v++) {
       abacus_to_mat(n, num_1s, num_0s, abby, mat);
       copy_mat(n, mat, new_mat);
       new_det = det(n, new_mat);
@@ -104,30 +98,26 @@ int main(int argc, char const *argv[]) {
       args[i].arg3 = i;
     }
 
-    for (int v = 0; v<wha; v++) {
+    for (int v = 0; done!=0; v++) {
       for (int i = 0; i < num_thds; i++) {
         abacus_to_mat(n, num_1s, num_0s, abby, mat[i]);
         done=gen_next_abacus(n, 0, num_1s, num_0s, abby);
-        if (done!=0)
-          copy_mat(n, mat[i], new_mat[i]);
+        copy_mat(n, mat[i], new_mat[i]);
       }
       for(int i=0; i<num_thds; i++ )
         pthread_create( &tid[i], NULL, get_result, &args[i] );
       for(int j=0; j<num_thds; j++ )
         pthread_join( tid[j], NULL );
       for(int k=0; k<num_thds; k++ ){
-        if (dets[k]*dets[k] > max*max){
+        if (detty[k]*detty[k] > max*max){
           copy_mat(n, mat[k], max_mat);
           prinmat(n, max_mat);
-          printf("\ndeterminant = %lld\n", dets[k]);
-          max =dets[k];
+          printf("\ndeterminant = %lld\n", detty[k]);
+          max =detty[k];
         }
       }
     }
   }
-  t = clock() - t;
-  double time_taken = ((double)t)/CLOCKS_PER_SEC;
-  printf("main() took %f seconds to execute \n", time_taken);
   return 0;
 }
 
