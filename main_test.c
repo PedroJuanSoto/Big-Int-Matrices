@@ -52,6 +52,8 @@ int main(int argc, char *argv[]){
     if (new*new>max*max){
       max = new;
       copy_mat(n, new_mat, max_mat);
+      printf("\ncurrent max is %lld\n", max);
+      prinmat(n, max_mat);
     }
   }
 
