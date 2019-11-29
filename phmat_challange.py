@@ -108,8 +108,8 @@ produce_cantorpairs(n, cantor)
 memoize_cantor_pairs(n, cantor, memo)
 produce_rand_mat(n, mat, memo)
 
-new = np.linalg.det(mat)
-max = np.linalg.det(mat)
+new = linalg.det(mat)
+max = linalg.det(mat)
 
 super_max = 0x3704d007
 new_mat = np.copy(mat)
