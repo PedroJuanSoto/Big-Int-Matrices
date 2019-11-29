@@ -59,9 +59,7 @@ void memoize_cantor_pairs(int n, int cantor[n][n], int memo[n*n][2]){
 
 void produce_rand_mat(int n, ll mat[n][n], int memo_cantor_pairs[n*n][2]){
   int forbidden[n*n];
-  void prinmat(int n, ll mat[n][n]);
   srand(time(0));
-  int legal = 0;
   int next_up;
   for (int l = 0; l < n*n; l++)
     forbidden[l]=l;
