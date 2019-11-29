@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import linalg
 import time
+import sys
 
 def permute_mat(i, j, k, l, mat):
   c = mat[i][j]
@@ -89,7 +90,15 @@ def produce_rand_mat(n, mat, memo_cantor_pairs):
 
 s = time.time()
 
-n=9
+if len(sys.argv) > 1:
+  n= int(sys.argv[1])
+  if len(sys.argv) > 2:
+    iterations = int(sys.argv[2])
+  else:
+    iterations = 100000
+else:
+  n=9
+  iterations = 100000
 
 mat = np.random.randint(1,n,(n,n))
 cantor = np.random.randint(1,n,(n,n))
@@ -102,7 +111,6 @@ produce_rand_mat(n, mat, memo)
 new = np.linalg.det(mat)
 max = np.linalg.det(mat)
 
-iterations = 100000
 super_max = 0x3704d007
 new_mat = np.copy(mat)
 matty = np.copy(mat)
